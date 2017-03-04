@@ -176,13 +176,13 @@ If FILENAME is nil, it will open the current buffer's file"
 (defun ssass-eval-buffer ()
   "Run the current region through sass, and display the output in another window."
   (interactive)
-  (let ((tmp-file (format "/tmp/sass-eval-%s.sass" (file-name-base))))
+  (let ((tmp-file (format "%ssass-eval-%s.sass" temporary-file-directory (file-name-base))))
     (write-region (point-min) (point-max) tmp-file nil nil nil nil)
     (ssass-eval-file tmp-file)
     (delete-file tmp-file)))
 
 ;;;###autoload
-(define-derived-mode ssass-mode prog-mode "Sass"
+(define-derived-mode ssass-mode prog-mode "Ssass"
   "Major mode for Sass"
   (setq tab-width ssass-tab-width)
   (setq indent-line-function 'ssass-indent)
