@@ -152,10 +152,7 @@ Use --sass for sassc, and --indented-syntax for node-sass."
   (indent-line-to (max 0 (- (ssass--indent-level) ssass-tab-width))))
 
 (defun ssass-eval-file (&optional filename)
-  "Screw checkdoc.
-
-Run the file with name FILENAME through sass, and display the output in another
-window.
+  "Run the given file through sass, and display the output in another window.
 
 If FILENAME is nil, it will open the current buffer's file"
   (interactive)
@@ -165,21 +162,18 @@ If FILENAME is nil, it will open the current buffer's file"
   (switch-to-buffer-other-window "*sass*")
   (special-mode))
 
-(defun ssass-eval-region ()
-  "Run the current buffer through sass, and display the output in another window."
-  (interactive)
-  (let ((tmp-file (format "/tmp/sass-eval-%s.sass" (file-name-base))))
-    (write-region (region-beginning) (region-end) tmp-file nil nil nil nil)
+(defun ssass-eval-region (beg end)
+  "Run the region from BEG to END through sass, and display the output in another window."
+  (interactive "r")
+  (let ((tmp-file (make-temp-file "sass-eval" nil ".sass")))
+    (write-region beg end tmp-file nil nil nil nil)
     (ssass-eval-file tmp-file)
-    (delete-file tmp-file)))
+    (delete-file tmp-file))  )
 
 (defun ssass-eval-buffer ()
-  "Run the current region through sass, and display the output in another window."
+  "Run the current buffer through sass, and display the output in another window."
   (interactive)
-  (let ((tmp-file (format "%ssass-eval-%s.sass" temporary-file-directory (file-name-base))))
-    (write-region (point-min) (point-max) tmp-file nil nil nil nil)
-    (ssass-eval-file tmp-file)
-    (delete-file tmp-file)))
+  (ssass-eval-region (point-min) (point-max)))
 
 ;;;###autoload
 (define-derived-mode ssass-mode prog-mode "Ssass"
