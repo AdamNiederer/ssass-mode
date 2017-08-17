@@ -154,9 +154,9 @@ Use --sass for sassc, and --indented-syntax for node-sass."
     (string-match-p "^[[:space:]]*$" (buffer-substring (point-at-bol) (point-at-eol)))))
 
 (defun ssass--comma-before-p ()
-  "Return whether the previous selector line has a comma at its end."
+  "Return whether the previous line has a comma at its end."
   (save-excursion
-    (ssass--goto-last-selector-line)
+    (forward-line -1)
     (string-match-p ".*," (buffer-substring (point-at-bol) (point-at-eol)))))
 
 (defun ssass--no-selector-line-p ()
@@ -207,6 +207,7 @@ If FILENAME is nil, it will open the current buffer's file"
 ;;;###autoload
 (define-derived-mode ssass-mode prog-mode "Ssass"
   "Major mode for Sass"
+  (setq-local electric-indent-mode nil)
   (setq tab-width ssass-tab-width)
   (setq indent-line-function 'ssass-indent)
   (font-lock-add-keywords nil ssass-font-lock-keywords)
