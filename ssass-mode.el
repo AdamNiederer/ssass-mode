@@ -122,6 +122,7 @@ Use --sass for sassc, and --indented-syntax for node-sass."
   "Return whether LINE is a selector."
   (not (or (string-empty-p line)
            (string-match-p ssass-key-regex line)
+           (string-match-p ssass-variable-regex line)
            (string-match-p ssass-directive-noindent-regex line)
            (string-match-p ssass-comment-regex line))))
 
