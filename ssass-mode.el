@@ -80,6 +80,11 @@
   :group 'ssass
   :type 'integer)
 
+(defcustom ssass-indent-blanks t
+  "Whether to indent blank lines."
+  :group 'ssass
+  :type 'boolean)
+
 (defcustom ssass-compiler "sassc"
   "Sass compiler for `ssass-eval-region' and `ssass-eval-buffer'."
   :group 'ssass
@@ -148,10 +153,10 @@ Use --sass for sassc, and --indented-syntax for node-sass."
        (beginning-of-line)
        (current-column))))
 
-(defun ssass--whitespace-before-p ()
-  "Return whether the previous line consists solely of whitespace."
+(defun ssass--whitespace-p (line)
+  "Return whether the line at offset from point LINE consists solely of whitespace."
   (save-excursion
-    (forward-line -1)
+    (forward-line line)
     (string-match-p "^[[:space:]]*$" (buffer-substring (point-at-bol) (point-at-eol)))))
 
 (defun ssass--comma-before-p ()
@@ -171,7 +176,8 @@ Use --sass for sassc, and --indented-syntax for node-sass."
   (interactive)
   (indent-line-to
    (cond
-    ((ssass--whitespace-before-p) 0)
+    ((and (not ssass-indent-blanks) (ssass--whitespace-p 0)) 0)
+    ((ssass--whitespace-p -1) 0)
     ((ssass--no-selector-line-p) 0)
     ((ssass--comma-before-p) (ssass--last-selector-line-indent-level))
     (t (+ ssass-tab-width (ssass--last-selector-line-indent-level))))))
