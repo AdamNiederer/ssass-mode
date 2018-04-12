@@ -158,7 +158,7 @@ Use --sass for sassc, and --indented-syntax for node-sass."
   "Return whether the previous line has a comma at its end."
   (save-excursion
     (forward-line -1)
-    (string-match-p ".*," (buffer-substring (point-at-bol) (point-at-eol)))))
+    (string-match-p ",\\s-*$" (buffer-substring (point-at-bol) (point-at-eol)))))
 
 (defun ssass--no-selector-line-p ()
   "Return whether there is no proper selector or keyword above this line."
