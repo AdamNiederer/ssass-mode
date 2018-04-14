@@ -131,17 +131,17 @@ Use --sass for sassc, and --indented-syntax for node-sass."
            (string-match-p ssass-directive-noindent-regex line)
            (string-match-p ssass-comment-regex line))))
 
-(defun ssass--goto-last-selector-line ()
+(defun ssass--goto-last-anchor-line ()
   "Move point to the line of the last selector, or the beginning of the buffer."
   (forward-line -1)
   (while (not (or (equal (point-min) (point-at-bol))
                   (ssass--selector-p (buffer-substring (point-at-bol) (point-at-eol)))))
     (forward-line -1)))
 
-(defun ssass--last-selector-line-indent-level ()
+(defun ssass--last-anchor-line-indent-level ()
   "Return the number of spaces indenting the line of the last selector."
   (save-excursion
-    (ssass--goto-last-selector-line)
+    (ssass--goto-last-anchor-line)
     (ssass--indent-level)))
 
 (defun ssass--indent-level ()
@@ -165,10 +165,10 @@ Use --sass for sassc, and --indented-syntax for node-sass."
     (forward-line -1)
     (string-match-p ",\\s-*$" (buffer-substring (point-at-bol) (point-at-eol)))))
 
-(defun ssass--no-selector-line-p ()
+(defun ssass--no-anchor-line-p ()
   "Return whether there is no proper selector or keyword above this line."
   (save-excursion
-    (ssass--goto-last-selector-line)
+    (ssass--goto-last-anchor-line)
     (not (ssass--selector-p (buffer-substring (point-at-bol) (point-at-eol))))))
 
 (defun ssass-indent ()
@@ -178,9 +178,9 @@ Use --sass for sassc, and --indented-syntax for node-sass."
    (cond
     ((and (not ssass-indent-blanks) (ssass--whitespace-p 0)) 0)
     ((ssass--whitespace-p -1) 0)
-    ((ssass--no-selector-line-p) 0)
-    ((ssass--comma-before-p) (ssass--last-selector-line-indent-level))
-    (t (+ ssass-tab-width (ssass--last-selector-line-indent-level))))))
+    ((ssass--no-anchor-line-p) 0)
+    ((ssass--comma-before-p) (ssass--last-anchor-line-indent-level))
+    (t (+ ssass-tab-width (ssass--last-anchor-line-indent-level))))))
 
 (defun ssass-dedent ()
   "Remove one level of indentation from the current line."
