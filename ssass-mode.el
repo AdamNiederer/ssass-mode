@@ -229,8 +229,9 @@ If FILENAME is nil, it will open the current buffer's file"
 (define-derived-mode ssass-mode prog-mode "Ssass"
   "Major mode for Sass"
   (setq-local electric-indent-mode nil)
+  (setq-local comment-start "//")
+  (setq-local comment-start-skip "\\(//+\\|/\\*+\\)\\s *")
   (set (make-local-variable 'tab-width) ssass-tab-width)
-  (set (make-local-variable 'comment-start) "//")
   (set (make-local-variable 'indent-line-function) 'ssass-indent)
   (font-lock-add-keywords nil ssass-font-lock-keywords)
   (modify-syntax-entry ?/ ". 124" ssass-mode-syntax-table)
